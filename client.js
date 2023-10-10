@@ -40,6 +40,7 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
   username = document.getElementById("usernameSelect").value;
   // Make API call to login
   // On success:
+  document.body.classList.add('user-logged-in');
   document.getElementById("loginRegisterCard").style.display = "none";
   document.getElementById("logoutButton").style.display = "block";
   fetchClaims();
@@ -48,6 +49,7 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
 // Logout
 document.getElementById("logoutButton").addEventListener("click", () => {
   username = null;
+  document.body.classList.remove('user-logged-in');
   document.getElementById("loginRegisterCard").style.display = "block";
   document.getElementById("logoutButton").style.display = "none";
 });
