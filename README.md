@@ -30,7 +30,7 @@ This project is a simple web application for managing case numbers and claims. I
 1. Clone the repository:
 
     ```bash
-    git clone https://github.com/your-username/forderung.git
+    git clone https://github.com/lamboserker/forderung.git
     ```
 
 2. Navigate to the project directory:
