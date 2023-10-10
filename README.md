@@ -10,7 +10,7 @@ This project is a simple web application for managing case numbers and claims. I
 
 ## Features
 
-- **User Registration and Login**: Users can register and login using a username.
+- **User Registration and Login**: Users can register and login using a username and a password.
 - **Claims Management**: Users can add new claims or update existing ones.
 - **Email Generation**: Users can generate an email draft for a payment plan.
 
