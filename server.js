@@ -20,6 +20,7 @@ app.post("/api/register", (req, res) => {
   res.json({ status: "success" });
 });
 
+console.log("test");
 // User Login
 app.post("/api/login", (req, res) => {
   const { username, password } = req.body;
