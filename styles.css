@@ -12,15 +12,17 @@ body {
   line-height: 1.6;
 }
 
-/* Container */
 .container {
-  
-  max-width: 800px;
   margin: 2rem auto;
+  max-width: 800px;
   padding: 2rem;
   background-color: #fff;
   border-radius: 12px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  /* Diese Zeile zentriert den Container horizontal, auch wenn das rechte Menü sichtbar ist */
+  transform: translateX(
+    calc(-50% + 125px)
+  ); /* 125px ist die Hälfte der Breite des rechten Menüs */
 }
 
 /* Show main content when user is logged in */
@@ -132,4 +134,18 @@ ul li {
 .btn-add-update:hover {
   background-color: #e0a800;
   transform: scale(1.05);
+}
+
+/* Right-side Vertical Menu */
+.right-menu {
+  position: fixed; /* Makes the menu stick to the side */
+  top: 0;
+  right: 0;
+  width: 250px; /* Width of the side menu */
+  height: 100%; /* Takes full viewport height */
+  background-color: #fff; /* Background color for clarity */
+  border-left: 1px solid #ccc; /* Border to differentiate from main content */
+  padding: 2rem; /* Padding inside the menu */
+  overflow-y: auto; /* Adds scrollbar if content exceeds viewport height */
+  box-shadow: -4px 0 8px rgba(0, 0, 0, 0.1); /* Shadow for depth */
 }

@@ -94,7 +94,7 @@ async function fetchClaims() {
 
   data.forEach((claim) => {
     const li = document.createElement("li");
-    li.textContent = `Case Number: ${claim.caseNumber}, Amount: €${claim.amount}`;
+    li.textContent = `Case Number: ${claim.caseNumber}, Amount: €${claim.amount} Creditor: ${claim.creditorName}`;
 
     const deleteBtn = document.createElement("button");
     deleteBtn.innerHTML = "&#128465;";
@@ -118,6 +118,7 @@ document.getElementById("claimForm").addEventListener("submit", async (e) => {
   const caseNumber = document.getElementById("caseNumber").value;
   const amount = parseFloat(document.getElementById("amount").value).toFixed(2);
   const existingClaim = claims.find((c) => c.caseNumber === caseNumber);
+  const creditorName = document.getElementById("creditorName").value;
   if (existingClaim && parseFloat(existingClaim.amount) >= parseFloat(amount)) {
     alert(
       "The entered amount must be higher than the current amount for the given case number."
@@ -129,7 +130,7 @@ document.getElementById("claimForm").addEventListener("submit", async (e) => {
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ username, caseNumber, amount }),
+    body: JSON.stringify({ username, caseNumber, amount, creditorName }),
   });
 
   if (response.ok) {
@@ -177,7 +178,52 @@ document.getElementById("emailButton").addEventListener("click", () => {
   )}&body=${encodeURIComponent(emailBody)}`;
 });
 
-function generateEmailBody(claims, creditorName, deadlineDate) {
+// Watch for changes on availableMoney and duration to update the suggested rate
+document
+  .getElementById("availableMoney")
+  .addEventListener("input", updateSuggestedRate);
+document
+  .getElementById("duration")
+  .addEventListener("input", updateSuggestedRate);
+
+function updateSuggestedRate() {
+  const availableMoney = parseFloat(
+    document.getElementById("availableMoney").value
+  );
+  const duration = parseInt(document.getElementById("duration").value);
+  if (isNaN(availableMoney) || isNaN(duration)) return;
+
+  const suggestedRate = (totalAmount / duration).toFixed(2);
+  document.getElementById("suggestedMonthlyRate").innerText = `€${Math.min(
+    suggestedRate,
+    availableMoney
+  ).toFixed(2)}`;
+}
+
+document.getElementById("emailButton").addEventListener("click", () => {
+  const creditorName = document.getElementById("creditorName").value;
+
+  // Group claims by creditor
+  const groupedClaims = claims.reduce((acc, claim) => {
+    if (!acc[claim.creditor]) {
+      acc[claim.creditor] = [];
+    }
+    acc[claim.creditor].push(claim);
+    return acc;
+  }, {});
+
+  for (const creditor in groupedClaims) {
+    const emailSubject = "Vorschlag für Ratenzahlungsvereinbarung";
+    let emailBody = generateEmailBody(groupedClaims[creditor], creditor);
+    window.location.href = `mailto:?subject=${encodeURIComponent(
+      emailSubject
+    )}&body=${encodeURIComponent(emailBody)}`;
+  }
+});
+
+
+//function to generate an  Email
+function generateEmailBody(claimsForCreditor, creditorName) {
   let emailBody = "Vorschlag für Ratenzahlungsvereinbarung\n";
   emailBody += "---------------------------------\n";
   emailBody += `An: ${creditorName}\n`;
@@ -185,22 +231,24 @@ function generateEmailBody(claims, creditorName, deadlineDate) {
   emailBody += "---------------------------------\n\n";
 
   emailBody += "Betreffende Forderungen:\n";
-  claims.forEach((claim) => {
+  claimsForCreditor.forEach((claim) => {
     emailBody += `Fallnummer: ${claim.caseNumber}, Betrag: €${claim.amount}\n`;
   });
 
   emailBody += "\n---------------------------------\n";
-  emailBody += `Gesamtschuld: €${totalAmount.toFixed(2)}\n`;
-
-  let suggestedPayment = (totalAmount / 12).toFixed(2);
-  if (parseFloat(suggestedPayment) > 200) {
-    suggestedPayment = "200.00";
-  }
-
-  emailBody += `Vorgeschlagene monatliche Rate: €${suggestedPayment}\n`;
+  const duration = parseInt(document.getElementById("duration").value);
+  const availableMoney = parseFloat(
+    document.getElementById("availableMoney").value
+  );
+  const suggestedRate = (totalAmount / duration).toFixed(2);
+  emailBody += `Vorgeschlagene monatliche Rate: €${Math.min(
+    suggestedRate,
+    availableMoney
+  ).toFixed(2)}\n`;
   emailBody += "---------------------------------\n";
   emailBody +=
     "Ich schlage vor, die oben genannten Beträge in monatlichen Raten zu begleichen.\n";
+  const deadlineDate = document.getElementById("deadlineDate").value;
   emailBody +=
     "Bitte bestätigen Sie diese Vereinbarung bis zum " + deadlineDate + ".\n";
 

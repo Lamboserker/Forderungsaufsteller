@@ -27,6 +27,7 @@ const userSchema = new mongoose.Schema({
     {
       caseNumber: String,
       amount: Number,
+      creditorName: String,
     },
   ],
 });
@@ -67,7 +68,7 @@ app.get("/api/users", async (req, res) => {
 
 // POST request to add new claims or update existing ones
 app.post("/api/claims", async (req, res) => {
-  const { username, caseNumber, amount } = req.body;
+  const { username, caseNumber, amount, creditorName } = req.body;
   const user = await User.findOne({ username });
   if (!user) {
     return res.status(401).json({ status: "error", message: "User not found" });
@@ -77,7 +78,7 @@ app.post("/api/claims", async (req, res) => {
   if (index !== -1) {
     user.claims[index].amount = amount;
   } else {
-    user.claims.push({ caseNumber, amount });
+    user.claims.push({ caseNumber, amount, creditorName });
   }
 
   await user.save();
