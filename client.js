@@ -26,12 +26,26 @@ document
     e.preventDefault();
     username = document.getElementById("registerUsername").value;
     const password = document.getElementById("registerPassword").value;
-    // Make API call to register
-    // On success:
-    localStorage.setItem(username, password);
-    document.getElementById("loginRegisterCard").style.display = "none";
-    document.getElementById("logoutButton").style.display = "block";
-    fetchClaims();
+
+    // Send registration request to the server
+    const response = await fetch("http://localhost:3000/api/register", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ username, password }),
+    });
+
+    const data = await response.json();
+
+    if (data.status === "success") {
+      alert("Registration successful!");
+      populateUsernames(); // Update the list of usernames after registration
+      document.getElementById("registerUsername").value = "";
+      document.getElementById("registerPassword").value = "";
+    } else {
+      alert(data.message);
+    }
   });
 
 // Login
@@ -40,16 +54,15 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
   username = document.getElementById("usernameSelect").value;
   // Make API call to login
   // On success:
-  document.body.classList.add('user-logged-in');
+  document.body.classList.add("user-logged-in");
   document.getElementById("loginRegisterCard").style.display = "none";
   document.getElementById("logoutButton").style.display = "block";
   fetchClaims();
 });
-
 // Logout
 document.getElementById("logoutButton").addEventListener("click", () => {
   username = null;
-  document.body.classList.remove('user-logged-in');
+  document.body.classList.remove("user-logged-in");
   document.getElementById("loginRegisterCard").style.display = "block";
   document.getElementById("logoutButton").style.display = "none";
 });
