@@ -221,7 +221,6 @@ document.getElementById("emailButton").addEventListener("click", () => {
   }
 });
 
-
 //function to generate an  Email
 function generateEmailBody(claimsForCreditor, creditorName) {
   let emailBody = "Vorschlag für Ratenzahlungsvereinbarung\n";
