@@ -1,3 +1,4 @@
+import  { setLanguage, getText }  from './index.js';
 let username = null;
 let totalAmount = 0;
 let claims = [];
@@ -97,7 +98,51 @@ function toggleContainerDisplay() {
     container.style.display = "none";
   }
 }
+// Function to update the text on the page based on the current language
+function updateText() {
+  const welcomeMessage = document.getElementById('welcomeMessage');
+  const registerUsername = document.getElementById('registerUsername');
+  const registerPassword = document.getElementById('registerPassword');
+  const registerButton = document.getElementById('registerButton');
+  const loginButton = document.getElementById('loginButton');
+  const logoutButton = document.getElementById('logoutButton');
+  const availableMoney = document.getElementById('availableMoney');
+  const duration = document.getElementById('duration');
+  const deadlineDate = document.getElementById('deadlineDate');
+  const caseNumber = document.getElementById('caseNumber');
+  const amount = document.getElementById('amount');
+  const creditorName = document.getElementById('creditorName');
+  const addUpdateClaimButton = document.getElementById('addUpdateClaimButton');
+  const suggestedMonthlyRateLabel = document.getElementById('suggestedMonthlyRateLabel');
+  const sendEmailButton = document.getElementById('sendEmailButton');
 
+  if (welcomeMessage) welcomeMessage.textContent = getText('welcomeMessage');
+  if (registerUsername) registerUsername.placeholder = getText('usernamePlaceholder');
+  if (registerPassword) registerPassword.placeholder = getText('passwordPlaceholder');
+  if (registerButton) registerButton.textContent = getText('registerButton');
+  if (loginButton) loginButton.textContent = getText('loginButton');
+  if (logoutButton) logoutButton.textContent = getText('logoutButton');
+  if (availableMoney) availableMoney.placeholder = getText('availableMoneyPlaceholder');
+  if (duration) duration.placeholder = getText('durationPlaceholder');
+  if (deadlineDate) deadlineDate.placeholder = getText('deadlineDatePlaceholder');
+  if (caseNumber) caseNumber.placeholder = getText('caseNumberPlaceholder');
+  if (amount) amount.placeholder = getText('amountPlaceholder');
+  if (creditorName) creditorName.placeholder = getText('creditorNamePlaceholder');
+  if (addUpdateClaimButton) addUpdateClaimButton.textContent = getText('addUpdateClaimButton');
+  if (suggestedMonthlyRateLabel) suggestedMonthlyRateLabel.textContent = getText('suggestedMonthlyRateLabel');
+  if (sendEmailButton) sendEmailButton.textContent = getText('sendEmailButton');
+  // Add more elements and translations as needed
+}
+
+// Event listener for language dropdown
+document.getElementById('languageDropdown').addEventListener('change', (event) => {
+  const selectedLanguage = event.target.value;
+  setLanguage(selectedLanguage);
+  updateText(); // Update the text when the language is changed
+});
+
+// Initial text update
+updateText();
 // fetch claims
 async function fetchClaims() {
   const response = await fetch(
@@ -188,6 +233,7 @@ async function deleteClaim(caseNumber) {
     fetchClaims();
   }
 }
+
 document.getElementById("emailButton").addEventListener("click", () => {
   // Group claims by creditor
   const groupedClaims = claims.reduce((acc, claim) => {

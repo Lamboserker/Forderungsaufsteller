@@ -19,22 +19,11 @@ body {
   padding: 2rem;
   background-color: #fff;
   border-radius: 12px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  /* Initially set to display: none to hide */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 /* Show main content when user is logged in */
 body.user-logged-in .container {
-  display: block;
-}
-
-/* Hide auth section when user is logged in */
-body.user-logged-in #authSection {
-  display: none;
-}
-
-/* Show auth section by default */
-#authSection {
   display: block;
 }
 
@@ -141,14 +130,49 @@ ul li {
 
 /* Right-side Vertical Menu */
 .right-menu {
-  position: fixed; /* Makes the menu stick to the side */
+  position: fixed;
   top: 0;
   right: 0;
-  width: 250px; /* Width of the side menu */
-  height: 100%; /* Takes full viewport height */
-  background-color: #fff; /* Background color for clarity */
-  border-left: 1px solid #ccc; /* Border to differentiate from main content */
-  padding: 2rem; /* Padding inside the menu */
-  overflow-y: auto; /* Adds scrollbar if content exceeds viewport height */
-  box-shadow: -4px 0 8px rgba(0, 0, 0, 0.1); /* Shadow for depth */
+  width: 250px;
+  height: 100%;
+  background-color: #f7f7f7;
+  border-left: 1px solid #ccc;
+  padding: 2rem;
+  overflow-y: auto;
+  box-shadow: -4px 0 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Additional Styling */
+#authSection {
+  background-color: rgba(255, 255, 255, 0.9);
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+#mainContent {
+  background-color: rgba(255, 255, 255, 0.9);
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+#logoutButton {
+  background-color: #dc3545;
+  color: #fff;
+}
+
+#logoutButton:hover {
+  background-color: #c82333;
+  transform: scale(1.05);
+}
+
+#emailButton {
+  background-color: #007bff;
+  color: #fff;
+}
+
+#emailButton:hover {
+  background-color: #0056b3;
+  transform: scale(1.05);
 }
