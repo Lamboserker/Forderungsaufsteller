@@ -1,67 +1,47 @@
 <!DOCTYPE html>
-<html>
+<html lang="de">
   <head>
-    <title>Case Numbers and Claims</title>
+    <meta charset="UTF-8" />
+    <title>Claim Management</title>
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <div class="right-menu">
-      <h2>Settings</h2>
-      <label for="availableMoney">Available monthly money:</label>
-      <input type="number" id="availableMoney" step="0.01" required /><br />
-      <label for="duration">Term (months):</label>
-      <input type="number" id="duration" required /><br />
-      <h3>
-        suggested monthly rate: <span id="suggestedMonthlyRate">€0.00</span>
-      </h3>
-      <button id="acceptButton" class="btn btn-primary">accept</button>
-    </div>
-
+    <!-- Authentication Section -->
     <div id="authSection" class="container">
-      <div id="loginRegisterCard">
-        <form id="registerForm">
-          <label for="username">Username:</label>
-          <input type="text" id="registerUsername" required /><br />
-          <label for="password">Password:</label>
-          <input type="password" id="registerPassword" required /><br />
-          <button type="submit" class="btn btn-login">Register</button>
-        </form>
-
-        <form id="loginForm">
-          <label for="username">Username:</label>
-          <select id="usernameSelect"></select
-          ><br />
-          <button type="submit" class="btn btn-login">Login</button>
-        </form>
-      </div>
+      <form id="registerForm">
+        <input type="text" id="registerUsername" placeholder="Username" />
+        <input type="password" id="registerPassword" placeholder="Password" />
+        <button type="submit" class="btn btn-primary">Register</button>
+      </form>
+      <form id="loginForm">
+        <select id="usernameSelect" class="btn btn-login"></select>
+        <button type="submit" class="btn btn-login">Login</button>
+      </form>
     </div>
 
-    <div class="logout-left">
-      <button id="logoutButton" class="btn btn-logout" style="display: none">
-        Logout
-      </button>
-    </div>
-    <div class="container">
-      <h1 class="header-primary">Case Numbers and Claims</h1>
+    <!-- Main Content -->
+    <div id="mainContent" class="container" style="display: none">
+      <button id="logoutButton" class="btn btn-logout">Logout</button>
+
+      <ul id="claimList"></ul>
       <form id="claimForm">
-        <label for="caseNumber">Case Number:</label>
-        <input type="text" id="caseNumber" required /><br />
-        <label for="amount">Amount of Claim:</label>
-        <input type="number" id="amount" step="0.01" required /><br />
-        <label for="creditorName">Name of the creditor:</label>
-        <input type="text" id="creditorName" required /><br />
-        <label for="deadlineDate">Deadline:</label>
-        <input type="date" id="deadlineDate" required /><br />
-        <button type="submit" class="btn btn-add-update">Add/Update</button>
+        <input type="text" id="caseNumber" placeholder="Case Number" />
+        <input type="number" id="amount" placeholder="Amount" />
+        <input type="text" id="creditorName" placeholder="Creditor Name" />
+        <button type="submit" class="btn btn-add-update">
+          Add/Update Claim
+        </button>
       </form>
 
-      <h2>Saved Claims</h2>
-      <ul id="claimList">
-        <!-- List items will be populated here -->
-      </ul>
+      <button id="emailButton" class="btn btn-primary">Send Email</button>
 
-      <button id="emailButton" class="btn btn-primary">Generate Email</button>
+      <input type="number" id="availableMoney" placeholder="Available Money" />
+      <input type="number" id="duration" placeholder="Duration in months" />
+      <p>Suggested Monthly Rate: <span id="suggestedMonthlyRate"></span></p>
+
+      <input type="date" id="deadlineDate" placeholder="Deadline Date" />
     </div>
+
     <script src="client.js"></script>
   </body>
 </html>

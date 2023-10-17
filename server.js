@@ -17,7 +17,7 @@ mongoose.connect(MONGODB_URI, {
   useUnifiedTopology: true,
 });
 mongoose.connection.on("connected", () => {
-  console.log("Verbunden mit MongoDB Atlas!");
+  console.log("connected to MongoDB!");
 });
 
 // data model

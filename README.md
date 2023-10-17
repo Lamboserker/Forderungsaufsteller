@@ -10,8 +10,8 @@ This project is a simple web application for managing case numbers and claims. I
 
 ## Features
 
-- **User Registration and Login**: Users can register and login using a username and a password.
-- **Claims Management**: Users can add new claims or update existing ones.
+- **User Registration and Login**: Users can register and login using a username and password.
+- **Claims Management**: Users can add new claims or update existing ones.  
 - **Email Generation**: Users can generate an email draft for a payment plan.
 
 ## Technologies Used
@@ -62,7 +62,7 @@ This project is a simple web application for managing case numbers and claims. I
 ## API Endpoints
 
 - `POST /api/register`: Register a new user
-- `POST /api/claims/:username`: Add or update a claim for a user
+- `POST /api/claims/:username`: Add or update a claim for a user  
 - `GET /api/claims/:username`: Get all claims for a user
 - `DELETE /api/claims/:username`: Delete a specific claim for a user
 - `GET /api/users`: Get all users and their claims

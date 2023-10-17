@@ -1,6 +1,7 @@
 let username = null;
 let totalAmount = 0;
 let claims = [];
+let userIsLoggedIn = false;
 
 // Populate username options from the server
 async function populateUsernames() {
@@ -17,6 +18,18 @@ async function populateUsernames() {
     option.text = username;
     usernameSelect.appendChild(option);
   });
+}
+
+// error handling
+async function fetchData(url, options) {
+  try {
+    const response = await fetch(url, options);
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Failed to fetch:", error);
+    return null;
+  }
 }
 
 // Register
@@ -53,19 +66,37 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
   e.preventDefault();
   username = document.getElementById("usernameSelect").value;
   // Make API call to login
+
   // On success:
+  userIsLoggedIn = true; // Update the login status
+  toggleContainerDisplay(); // Toggle display
   document.body.classList.add("user-logged-in");
-  document.getElementById("loginRegisterCard").style.display = "none";
+  document.getElementById("authSection").style.display = "none";
   document.getElementById("logoutButton").style.display = "block";
+  document.getElementById("mainContent").style.display = "block";
   fetchClaims();
 });
+
 // Logout
 document.getElementById("logoutButton").addEventListener("click", () => {
   username = null;
+  userIsLoggedIn = false; // Update the login status
+  toggleContainerDisplay(); // Toggle display
   document.body.classList.remove("user-logged-in");
-  document.getElementById("loginRegisterCard").style.display = "block";
+  document.getElementById("authSection").style.display = "block";
   document.getElementById("logoutButton").style.display = "none";
+  document.getElementById("mainContent").style.display = "none";
 });
+
+function toggleContainerDisplay() {
+  const container = document.querySelector(".container");
+
+  if (userIsLoggedIn) {
+    container.style.display = "block";
+  } else {
+    container.style.display = "none";
+  }
+}
 
 // fetch claims
 async function fetchClaims() {
@@ -157,26 +188,56 @@ async function deleteClaim(caseNumber) {
     fetchClaims();
   }
 }
-
 document.getElementById("emailButton").addEventListener("click", () => {
-  const creditorName = document.getElementById("creditorName").value;
-  const deadlineDate = document.getElementById("deadlineDate").value;
+  // Group claims by creditor
+  const groupedClaims = claims.reduce((acc, claim) => {
+    if (!acc[claim.creditorName]) {
+      // Use creditorName as the key
+      acc[claim.creditorName] = [];
+    }
+    acc[claim.creditorName].push(claim);
+    return acc;
+  }, {});
 
-  const emailSubject = "Vorschlag für Ratenzahlungsvereinbarung";
-  let emailBody = generateEmailBody(claims, creditorName, deadlineDate);
+  // Loop through each creditor and send individual emails
+  for (const creditor in groupedClaims) {
+    const emailSubject = "Vorschlag für Ratenzahlungsvereinbarung";
+    let emailBody = generateEmailBody(groupedClaims[creditor], creditor);
 
-  let suggestedPayment = (totalAmount / 12).toFixed(2);
-  if (parseFloat(suggestedPayment) > 200) {
-    suggestedPayment = "200.00";
+    // Open email client
+    window.location.href = `mailto:?subject=${encodeURIComponent(
+      emailSubject
+    )}&body=${encodeURIComponent(emailBody)}`;
   }
-
-  emailBody += `\nTotal Amount: €${totalAmount.toFixed(2)}\n`;
-  emailBody += `Suggested Monthly Payment: €${suggestedPayment}\n`;
-
-  window.location.href = `mailto:?subject=${encodeURIComponent(
-    emailSubject
-  )}&body=${encodeURIComponent(emailBody)}`;
 });
+
+function generateEmailBody(claimsForCreditor, creditorName) {
+  let emailBody = "Vorschlag für Ratenzahlungsvereinbarung\n";
+  emailBody += "---------------------------------\n";
+  emailBody += `An: ${creditorName}\n`;
+  emailBody += `Datum: ${new Date().toLocaleDateString("de-DE")}\n`;
+  emailBody += "---------------------------------\n\n";
+
+  let localTotalAmount = 0; // Local total amount for this creditor
+  emailBody += "Betreffende Forderungen:\n";
+
+  claimsForCreditor.forEach((claim) => {
+    emailBody += `Fallnummer: ${claim.caseNumber}, Betrag: €${claim.amount}\n`;
+    localTotalAmount += parseFloat(claim.amount);
+  });
+
+  const duration = parseInt(document.getElementById("duration").value);
+  const availableMoney = parseFloat(
+    document.getElementById("availableMoney").value
+  );
+  const suggestedRate = (localTotalAmount / duration).toFixed(2);
+  emailBody += `Vorgeschlagene monatliche Rate: €${Math.min(
+    suggestedRate,
+    availableMoney
+  ).toFixed(2)}\n`;
+
+  return emailBody;
+}
 
 // Watch for changes on availableMoney and duration to update the suggested rate
 document
@@ -198,60 +259,6 @@ function updateSuggestedRate() {
     suggestedRate,
     availableMoney
   ).toFixed(2)}`;
-}
-
-document.getElementById("emailButton").addEventListener("click", () => {
-  const creditorName = document.getElementById("creditorName").value;
-
-  // Group claims by creditor
-  const groupedClaims = claims.reduce((acc, claim) => {
-    if (!acc[claim.creditor]) {
-      acc[claim.creditor] = [];
-    }
-    acc[claim.creditor].push(claim);
-    return acc;
-  }, {});
-
-  for (const creditor in groupedClaims) {
-    const emailSubject = "Vorschlag für Ratenzahlungsvereinbarung";
-    let emailBody = generateEmailBody(groupedClaims[creditor], creditor);
-    window.location.href = `mailto:?subject=${encodeURIComponent(
-      emailSubject
-    )}&body=${encodeURIComponent(emailBody)}`;
-  }
-});
-
-//function to generate an  Email
-function generateEmailBody(claimsForCreditor, creditorName) {
-  let emailBody = "Vorschlag für Ratenzahlungsvereinbarung\n";
-  emailBody += "---------------------------------\n";
-  emailBody += `An: ${creditorName}\n`;
-  emailBody += `Datum: ${new Date().toLocaleDateString("de-DE")}\n`;
-  emailBody += "---------------------------------\n\n";
-
-  emailBody += "Betreffende Forderungen:\n";
-  claimsForCreditor.forEach((claim) => {
-    emailBody += `Fallnummer: ${claim.caseNumber}, Betrag: €${claim.amount}\n`;
-  });
-
-  emailBody += "\n---------------------------------\n";
-  const duration = parseInt(document.getElementById("duration").value);
-  const availableMoney = parseFloat(
-    document.getElementById("availableMoney").value
-  );
-  const suggestedRate = (totalAmount / duration).toFixed(2);
-  emailBody += `Vorgeschlagene monatliche Rate: €${Math.min(
-    suggestedRate,
-    availableMoney
-  ).toFixed(2)}\n`;
-  emailBody += "---------------------------------\n";
-  emailBody +=
-    "Ich schlage vor, die oben genannten Beträge in monatlichen Raten zu begleichen.\n";
-  const deadlineDate = document.getElementById("deadlineDate").value;
-  emailBody +=
-    "Bitte bestätigen Sie diese Vereinbarung bis zum " + deadlineDate + ".\n";
-
-  return emailBody;
 }
 
 // Initial setup
