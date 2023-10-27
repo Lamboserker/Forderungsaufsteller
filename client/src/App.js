@@ -6,16 +6,37 @@ import { LanguageProvider } from "./components/languageContext";
 import "./App.css";
 
 const  App = () => {
-  const [isLoggedIn] = useState(false);
+  const [userIsLoggedIn, setUserIsLoggedIn] = useState(false);
+  const [username, setUsername] = useState(null);
+
+  const handleLogin = (newUsername) => {
+    // Implementieren Sie hier die Anmelde-Logik, z.B. API-Aufruf
+
+    // Bei Erfolg:
+    setUsername(newUsername);
+    setUserIsLoggedIn(true);
+  };
+
+  const handleLogout = () => {
+    setUsername(null);
+    setUserIsLoggedIn(false);
+  };
+
   return (
     <LanguageProvider>
       <div className="App">
         <LanguageDropdown />
-        <AuthSection />
-        {isLoggedIn && <MainContent />}
+        {userIsLoggedIn ? (
+          <>
+            <button onClick={handleLogout}>Logout</button>
+            <MainContent username={username} />
+          </>
+        ) : (
+          <AuthSection onLogin={handleLogin} />
+        )}
       </div>
     </LanguageProvider>
   );
-}
+};
 
 export default App;

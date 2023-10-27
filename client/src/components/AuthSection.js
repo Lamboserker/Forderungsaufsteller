@@ -1,60 +1,20 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from 'react';
 import { useLanguage } from "./languageContext";
 
-const AuthSection = () => {
+
+const AuthSection = ({onLogin}) => {
   const { getText } = useLanguage();
+  const [isRegister, setIsRegister] = useState(true);
+  const [users, setUsers] = useState([]);
+  const [selectedUser, setSelectedUser] = useState('');
+  const [ setPassword] = useState('');
   const [registerUsername, setRegisterUsername] = useState("");
   const [registerPassword, setRegisterPassword] = useState("");
-  const [usernames] = useState([]);
-  const [selectedUsername, setSelectedUsername] = useState("");
+  const [selectedUsername] = useState(""); 
 
-  useEffect(() => {
-    const populateUsernames = async () => {
-      try {
-        const response = await fetch("http://localhost:4000/api/auth/users");
-        const data = await response.json();
-        const usernames = data.usernames;
-
-        const usernameSelect = document.getElementById("usernameSelect");
-        usernameSelect.innerHTML = ""; // Clear existing options
-
-        usernames.forEach((username) => {
-          const option = document.createElement("option");
-          option.value = username;
-          option.text = username;
-          usernameSelect.appendChild(option);
-        });
-      } catch (error) {
-        console.error("Failed to fetch usernames:", error);
-      }
-    };
-
-    populateUsernames();
-  }, []);
-
-  const handleRegister = async (e) => {
-    e.preventDefault();
-    // Send registration request to the server
-    const response = await fetch("http://localhost:4000/api/auth/register", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        username: registerUsername,
-        password: registerPassword,
-      }),
-    });
-
-    const data = await response.json();
-
-    if (data.status === "success") {
-      alert("Registration successful!");
-      setRegisterUsername("");
-      setRegisterPassword("");
-    } else {
-      alert(data.message);
-    }
+  const handleRegister = (newUser) => {
+    setUsers([...users, newUser]);
+    setIsRegister(false);
   };
 
   const handleLogin = async (e) => {
@@ -75,7 +35,7 @@ const AuthSection = () => {
 
       if (data.status === "success") {
         alert("Login successful!");
-        // Hier können Sie den Benutzerstatus aktualisieren, z.B. einen Zustand setzen oder den Benutzer zu einer anderen Seite weiterleiten
+        onLogin(selectedUsername);
       } else {
         alert(data.message);
       }
@@ -85,8 +45,11 @@ const AuthSection = () => {
   };
 
   return (
-    <div id="authSection" className="container">
-      <form id="registerForm" onSubmit={handleRegister}>
+    <div>
+      {isRegister ? (
+        <div>
+          <h1>Register</h1>
+          <form id="registerForm" onSubmit={handleRegister}>
         <input
           type="text"
           id="registerUsername"
@@ -105,23 +68,33 @@ const AuthSection = () => {
           {getText("registerButton")}
         </button>
       </form>
-      <form id="loginForm" onSubmit={handleLogin}>
-        <select
-          id="usernameSelect"
-          className="btn btn-login"
-          value={selectedUsername}
-          onChange={(e) => setSelectedUsername(e.target.value)}
-        >
-          {usernames.map((username, index) => (
-            <option key={index} value={username}>
-              {username}
+          <button onClick={() => setIsRegister(false)}>Login User</button>
+        </div>
+      ) : (
+        <div>
+          <h1>Login</h1>
+          <select onChange={(e) => setSelectedUser(e.target.value)}>
+            <option value="" disabled selected>
+              Select User
             </option>
-          ))}
-        </select>
-        <button type="submit" className="btn btn-login">
-          {getText("loginButton")}
-        </button>
-      </form>
+            {users.map((user, index) => (
+              <option key={index} value={user}>
+                {user}
+              </option>
+            ))}
+          </select>
+
+          {selectedUser && (
+            <div>
+              <label>Password:</label>
+              <input type="password" onChange={(e) => setPassword(e.target.value)} />
+            </div>
+          )}
+
+          <button onClick={handleLogin}>Login</button>
+          <button onClick={() => setIsRegister(true)}>Register User</button>
+        </div>
+      )}
     </div>
   );
 };
