@@ -1,8 +1,8 @@
-# Forderung - Case Numbers and Claims Management
+# Claims - Case Numbers and Claims Management
 
 ## Overview
 
-This project is a simple web application for managing case numbers and claims. It's built using Node.js with Express for the backend and vanilla JavaScript for the frontend. The application allows users to:
+This project is a simple web application designed for managing case numbers and claims. It is constructed using Node.js with Express for the backend, and React for the frontend. The application facilitates users to:
 
 - Register and login
 - Add, update, and delete claims
@@ -11,13 +11,13 @@ This project is a simple web application for managing case numbers and claims. I
 ## Features
 
 - **User Registration and Login**: Users can register and login using a username and password.
-- **Claims Management**: Users can add new claims or update existing ones.  
+- **Claims Management**: Users can add new claims or update existing ones.
 - **Email Generation**: Users can generate an email draft for a payment plan.
 
 ## Technologies Used
 
 - Backend: Node.js, Express
-- Frontend: HTML, CSS, JavaScript
+- Frontend: HTML, CSS, React
 - Other Libraries: body-parser, cors
 
 ## Prerequisites
@@ -36,36 +36,66 @@ This project is a simple web application for managing case numbers and claims. I
 2. Navigate to the project directory:
 
     ```bash
-    cd forderung
+    cd Forderungsaufsteller
     ```
 
-3. Install dependencies:
+### Server
+
+1. Navigate to the server directory:
+
+    ```bash
+    cd server
+    ```
+
+2. Install server dependencies:
 
     ```bash
     npm install
     ```
 
-## Usage
-
-1. Start the server:
+3. Start the server:
 
     ```bash
-    node server.js
+    npm start
     ```
 
-    The server will start running at `http://localhost:3000`.
+### Client
 
-2. Open `index.html` in your web browser.
+1. Navigate to the client directory:
 
-3. Register or login to start managing your claims.
+    ```bash
+    cd client
+    ```
+
+2. Install client dependencies:
+
+    ```bash
+    npm install
+    ```
+
+3. Start the client:
+
+    ```bash
+    npm start
+    ```
+
+The application will now be running at `http://localhost:4000`.
+
+## Usage
+
+1. Open `http://localhost:4000` in your web browser.
+2. Register or login to start managing your claims.
 
 ## API Endpoints
 
-- `POST /api/register`: Register a new user
+- `POST /api/auth/register`: Register a new user
 - `POST /api/claims/:username`: Add or update a claim for a user  
 - `GET /api/claims/:username`: Get all claims for a user
 - `DELETE /api/claims/:username`: Delete a specific claim for a user
-- `GET /api/users`: Get all users and their claims
+- `GET /api/claims/users`: Get all users and their claims
+
+
+
 
 ## Contributing
 
