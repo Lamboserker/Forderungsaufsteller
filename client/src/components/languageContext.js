@@ -1,5 +1,5 @@
 import React, { createContext, useState, useContext } from "react";
-import { getText, setLanguage } from "./index.js"; // Importiere deine Funktionen aus index.js
+import { getText, setLanguage } from "./index"; // Importiere deine Funktionen aus index.js
 
 const LanguageContext = createContext();
 
