@@ -33,7 +33,7 @@ router.post("/login", async (req, res) => {
   if (!user) {
     return res
       .status(401)
-      .json({ status: "error", message: "Invalid credentials" });
+      .json({ status: "error", message: "Invalid credentials at username" });
   }
 
   // Compare hashed password with the provided password
@@ -41,7 +41,7 @@ router.post("/login", async (req, res) => {
   if (!match) {
     return res
       .status(401)
-      .json({ status: "error", message: "Invalid credentials" });
+      .json({ status: "error", message: "Invalid credentials at password" });
   }
 
   res.json({ status: "success" });

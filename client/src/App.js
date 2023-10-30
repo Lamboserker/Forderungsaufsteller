@@ -22,13 +22,14 @@ const  App = () => {
     setUserIsLoggedIn(false);
   };
 
+  
   return (
     <LanguageProvider>
       <div className="App">
         <LanguageDropdown />
         {userIsLoggedIn ? (
           <>
-            <button onClick={handleLogout}>Logout</button>
+            <button onClick={handleLogout}  className="btn btn-logout">Logout</button>
             <MainContent username={username} />
           </>
         ) : (

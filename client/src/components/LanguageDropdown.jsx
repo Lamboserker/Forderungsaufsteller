@@ -1,5 +1,5 @@
 import React from "react";
-import { useLanguage } from "./languageContext.js";
+import { useLanguage } from "./languageContext.jsx";
 
 const LanguageDropdown = () => {
   const { currentLanguage, changeLanguage } = useLanguage();

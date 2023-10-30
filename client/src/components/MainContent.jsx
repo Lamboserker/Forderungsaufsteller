@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useLanguage } from "./languageContext";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTrash } from "@fortawesome/free-solid-svg-icons";
 
-const MainContent = () => {
+const MainContent = ({ username }) => {
   const { getText } = useLanguage();
-  const [username] = useState(null);
   const [totalAmount, setTotalAmount] = useState(0);
   const [claims, setClaims] = useState([]);
   const [availableMoney, setAvailableMoney] = useState("");
@@ -93,6 +94,30 @@ const MainContent = () => {
     }
   };
 
+  const handleDeleteClaim = async (caseNumber) => {
+    try {
+      const response = await fetch(`http://localhost:4000/api/claims`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          username,
+          caseNumber,
+        }),
+      });
+
+      if (response.ok) {
+        fetchClaims();
+        alert("Claim successfully deleted.");
+      } else {
+        alert("Failed to delete claim.");
+      }
+    } catch (error) {
+      console.error("Failed to delete claim:", error);
+    }
+  };
+
   const handleEmailButtonClick = () => {
     if (!username) {
       alert("Please log in first.");
@@ -160,10 +185,6 @@ const MainContent = () => {
 
   return (
     <div id="mainContent" className="container">
-      <button id="logoutButton" className="btn btn-logout">
-        {getText("logoutButton")}
-      </button>
-
       <input
         type="number"
         id="availableMoney"
@@ -222,6 +243,11 @@ const MainContent = () => {
           <li key={index}>
             Case Number: {claim.caseNumber}, Amount: €{claim.amount} Creditor:{" "}
             {claim.creditorName}
+            <FontAwesomeIcon
+              icon={faTrash}
+              onClick={() => handleDeleteClaim(claim.caseNumber)}
+              style={{ cursor: "pointer", marginLeft: "10px", color: "red" }}
+            />
           </li>
         ))}
       </ul>

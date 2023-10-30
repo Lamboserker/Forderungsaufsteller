@@ -16,6 +16,7 @@ const languages = {
       addUpdateClaimButton: 'Add/Update Claim',
       suggestedMonthlyRateLabel: 'Suggested Monthly Rate:',
       sendEmailButton: 'Send Email',
+      selectUsernamePlaceholder: 'Select Username',
     },
     german: {
       welcomeMessage: 'Willkommen bei der Anspruchsverwaltung',
@@ -33,6 +34,7 @@ const languages = {
       addUpdateClaimButton: 'Anspruch hinzufügen/aktualisieren',
       suggestedMonthlyRateLabel: 'Vorgeschlagene monatliche Rate:',
       sendEmailButton: 'E-Mail senden',
+      selectUsernamePlaceholder: 'Benutzername auswählen',
     },
   };
   
