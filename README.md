@@ -56,7 +56,7 @@ This project is a simple web application designed for managing case numbers and 
 3. Start the server:
 
     ```bash
-    npm start
+    node index.js
     ```
 
 ### Client
@@ -79,11 +79,11 @@ This project is a simple web application designed for managing case numbers and 
     npm start
     ```
 
-The application will now be running at `http://localhost:4000`.
+The application will now be running at `http://localhost:3000`.
 
 ## Usage
 
-1. Open `http://localhost:4000` in your web browser.
+1. Open `http://localhost:3000` in your web browser.
 2. Register or login to start managing your claims.
 
 ## API Endpoints
